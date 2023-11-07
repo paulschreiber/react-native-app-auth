@@ -143,6 +143,7 @@ with optional overrides.
 - **androidAllowCustomBrowsers** - (`string[]`) (default: undefined) _ANDROID_ override the used browser for authorization. If no value is provided, all browsers are allowed.
 - **androidTrustedWebActivity** - (`boolean`) (default: `false`) _ANDROID_ Use [`EXTRA_LAUNCH_AS_TRUSTED_WEB_ACTIVITY`](https://developer.chrome.com/docs/android/trusted-web-activity/) when opening web view.
 - **connectionTimeoutSeconds** - (`number`) configure the request timeout interval in seconds. This must be a positive number. The default values are 60 seconds on iOS and 15 seconds on Android.
+- **responseMode** - (`string`) the response mode for your request (`query`, `fragnent`, `form_post`)
 
 #### result
 

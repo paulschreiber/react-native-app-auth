@@ -77,6 +77,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
     private Boolean useNonce;
     private String codeVerifier;
     private String clientAuthMethod = "basic";
+    private String responseMode;
     private Map<String, String> registrationRequestHeaders = null;
     private Map<String, String> authorizationRequestHeaders = null;
     private Map<String, String> tokenRequestHeaders = null;
@@ -237,6 +238,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
             final Boolean useNonce,
             final Boolean usePKCE,
             final String clientAuthMethod,
+            final String responseMode,
             final boolean dangerouslyAllowInsecureHttpRequests,
             final ReadableMap customHeaders,
             final ReadableArray androidAllowCustomBrowsers,
@@ -254,6 +256,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
         this.additionalParametersMap = additionalParametersMap;
         this.clientSecret = clientSecret;
         this.clientAuthMethod = clientAuthMethod;
+        this.responseMode = responseMode;
         this.skipCodeExchange = skipCodeExchange;
         this.useNonce = useNonce;
         this.usePKCE = usePKCE;
@@ -333,6 +336,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
             final ReadableMap serviceConfiguration,
             final Double connectionTimeoutMillis,
             final String clientAuthMethod,
+            final String responseMode,
             final boolean dangerouslyAllowInsecureHttpRequests,
             final ReadableMap customHeaders,
             final ReadableArray androidAllowCustomBrowsers,
@@ -364,6 +368,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
                         redirectUrl,
                         additionalParametersMap,
                         clientAuthMethod,
+                        responseMode,
                         clientSecret,
                         promise
                 );
@@ -397,6 +402,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
                                         redirectUrl,
                                         additionalParametersMap,
                                         clientAuthMethod,
+                                        responseMode,
                                         clientSecret,
                                         promise
                                 );
@@ -692,7 +698,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
             if (additionalParametersMap.containsKey("nonce")) {
                 authRequestBuilder.setNonce(additionalParametersMap.get("nonce"));
                 additionalParametersMap.remove("nonce");
-            
+
            }
             if (additionalParametersMap.containsKey("ui_locales")) {
                 authRequestBuilder.setUiLocales(additionalParametersMap.get("ui_locales"));
@@ -749,6 +755,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
             final String redirectUrl,
             final Map<String, String> additionalParametersMap,
             final String clientAuthMethod,
+            final String responseMode,
             final String clientSecret,
             final Promise promise
     ) {
@@ -933,7 +940,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
         }
 
         CustomConnectionBuilder customConnection = new CustomConnectionBuilder(proxiedBuilder);
-        
+
         if (headers != null) {
             customConnection.setHeaders(headers);
         }
@@ -953,7 +960,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
         }
 
         CustomConnectionBuilder customConnection = new CustomConnectionBuilder(proxiedBuilder);
-        
+
         if (headers != null) {
             customConnection.setHeaders(headers);
         }

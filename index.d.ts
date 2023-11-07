@@ -75,6 +75,7 @@ export type AuthConfiguration = BaseAuthConfiguration & {
   customHeaders?: CustomHeaders;
   additionalHeaders?: AdditionalHeaders;
   connectionTimeoutSeconds?: number;
+  responseMode?: string;
   useNonce?: boolean;
   usePKCE?: boolean;
   warmAndPrefetchChrome?: boolean;

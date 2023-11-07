@@ -59,6 +59,7 @@ describe('AppAuth', () => {
     customHeaders: null,
     additionalHeaders: { header: 'value' },
     connectionTimeoutSeconds: TIMEOUT_SEC,
+    responseMode: false,
     skipCodeExchange: false,
     iosCustomBrowser: 'safari',
     iosPrefersEphemeralSession: true,
@@ -222,7 +223,7 @@ describe('AppAuth', () => {
         registerConfig.additionalParameters,
         registerConfig.serviceConfiguration,
         registerConfig.connectionTimeoutSeconds,
-        registerConfig.additionalHeaders
+        registerConfig.additionalHeaders,
       );
     });
 
@@ -520,6 +521,15 @@ describe('AppAuth', () => {
       }).toThrow('Config error: connectionTimeoutSeconds must be a number');
     });
 
+    it('throws an error when responseMode value isnt a string', () => {
+      expect(() => {
+        register({
+          ...config,
+          responseMode: 123,
+        });
+      }).toThrow('Config error: responseMode must be a string');
+    });
+
     it('calls the native wrapper with the correct args on iOS', () => {
       authorize(config);
       expect(mockAuthorize).toHaveBeenCalledWith(
@@ -536,7 +546,8 @@ describe('AppAuth', () => {
         config.useNonce,
         config.usePKCE,
         config.iosCustomBrowser,
-        config.iosPrefersEphemeralSession
+        config.iosPrefersEphemeralSession,
+        config.responseMode,
       );
     });
 
@@ -551,6 +562,7 @@ describe('AppAuth', () => {
         serviceConfiguration: null,
         additionalHeaders: null,
         scopes: ['openid'],
+        responseMode: null,
       });
       expect(mockAuthorize).toHaveBeenCalledWith(
         'test-issuer',
@@ -558,6 +570,7 @@ describe('AppAuth', () => {
         'test-clientId',
         'test-clientSecret',
         ['openid'],
+        null,
         null,
         null,
         false,

@@ -48,6 +48,7 @@ RCT_REMAP_METHOD(register,
                  additionalParameters: (NSDictionary *_Nullable) additionalParameters
                  serviceConfiguration: (NSDictionary *_Nullable) serviceConfiguration
                  connectionTimeoutSeconds: (double) connectionTimeoutSeconds
+                 responseMode: (NSString *) responseMode
                  additionalHeaders: (NSDictionary *_Nullable) additionalHeaders
                  resolve: (RCTPromiseResolveBlock) resolve
                  reject: (RCTPromiseRejectBlock)  reject)
@@ -64,6 +65,7 @@ RCT_REMAP_METHOD(register,
                             subjectType: subjectType
                 tokenEndpointAuthMethod: tokenEndpointAuthMethod
                    additionalParameters: additionalParameters
+                           responseMode: responseMode
                                 resolve: resolve
                                  reject: reject];
     } else {
@@ -80,6 +82,7 @@ RCT_REMAP_METHOD(register,
                                                                                     subjectType: subjectType
                                                                         tokenEndpointAuthMethod: tokenEndpointAuthMethod
                                                                            additionalParameters: additionalParameters
+                                                                                   responseMode: responseMode
                                                                                         resolve: resolve
                                                                                          reject: reject];
                                                             }];
@@ -96,6 +99,7 @@ RCT_REMAP_METHOD(authorize,
                  serviceConfiguration: (NSDictionary *_Nullable) serviceConfiguration
                  skipCodeExchange: (BOOL) skipCodeExchange
                  connectionTimeoutSeconds: (double) connectionTimeoutSeconds
+                 responseMode: (NSString *) responseMode
                  additionalHeaders: (NSDictionary *_Nullable) additionalHeaders
                  useNonce: (BOOL *) useNonce
                  usePKCE: (BOOL *) usePKCE
@@ -117,7 +121,8 @@ RCT_REMAP_METHOD(authorize,
                                 useNonce: useNonce
                                  usePKCE: usePKCE
                     additionalParameters: additionalParameters
-                    skipCodeExchange: skipCodeExchange
+                            responseMode: (NSString *) responseMode
+                        skipCodeExchange: skipCodeExchange
                         iosCustomBrowser: iosCustomBrowser
                  prefersEphemeralSession: prefersEphemeralSession
                                  resolve: resolve
@@ -130,7 +135,7 @@ RCT_REMAP_METHOD(authorize,
                                                                     return;
                                                                 }
                                                                 [self authorizeWithConfiguration: configuration
-                                                                 
+
                                                                                      redirectUrl: redirectUrl
                                                                                         clientId: clientId
                                                                                     clientSecret: clientSecret
@@ -138,6 +143,7 @@ RCT_REMAP_METHOD(authorize,
                                                                                         useNonce: useNonce
                                                                                          usePKCE: usePKCE
                                                                             additionalParameters: additionalParameters
+                                                                                    responseMode: (NSString *) responseMode
                                                                                 skipCodeExchange: skipCodeExchange
                                                                                 iosCustomBrowser: iosCustomBrowser
                                                                          prefersEphemeralSession: prefersEphemeralSession
@@ -157,6 +163,7 @@ RCT_REMAP_METHOD(refresh,
                  additionalParameters: (NSDictionary *_Nullable) additionalParameters
                  serviceConfiguration: (NSDictionary *_Nullable) serviceConfiguration
                  connectionTimeoutSeconds: (double) connectionTimeoutSeconds
+                 responseMode: (NSString *) responseMode
                  additionalHeaders: (NSDictionary *_Nullable) additionalHeaders
                  iosCustomBrowser: (NSString *) iosCustomBrowser
                  resolve:(RCTPromiseResolveBlock) resolve
@@ -174,6 +181,7 @@ RCT_REMAP_METHOD(refresh,
                           refreshToken: refreshToken
                                 scopes: scopes
                   additionalParameters: additionalParameters
+                          responseMode: responseMode
                                resolve: resolve
                                 reject: reject];
     } else {
@@ -191,6 +199,7 @@ RCT_REMAP_METHOD(refresh,
                                                                                   refreshToken: refreshToken
                                                                                         scopes: scopes
                                                                           additionalParameters: additionalParameters
+                                                                                  responseMode: responseMode
                                                                                        resolve: resolve
                                                                                         reject: reject];
                                                             }];
@@ -203,6 +212,7 @@ RCT_REMAP_METHOD(logout,
                  postLogoutRedirectURL: (NSString *) postLogoutRedirectURL
                  serviceConfiguration: (NSDictionary *_Nullable) serviceConfiguration
                  additionalParameters: (NSDictionary *_Nullable) additionalParameters
+                 responseMode: (NSString *) responseMode
                  iosCustomBrowser: (NSString *) iosCustomBrowser
                  prefersEphemeralSession: (BOOL *) prefersEphemeralSession
                  resolve:(RCTPromiseResolveBlock) resolve
@@ -214,6 +224,7 @@ RCT_REMAP_METHOD(logout,
                           idTokenHint: idTokenHint
                 postLogoutRedirectURL: postLogoutRedirectURL
                  additionalParameters: additionalParameters
+                         responseMode: responseMode
                      iosCustomBrowser: iosCustomBrowser
               prefersEphemeralSession: prefersEphemeralSession
                               resolve: resolve
@@ -230,6 +241,7 @@ RCT_REMAP_METHOD(logout,
                                                                                       idTokenHint: idTokenHint
                                                                             postLogoutRedirectURL: postLogoutRedirectURL
                                                                              additionalParameters: additionalParameters
+                                                                                     responseMode: responseMode
                                                                                  iosCustomBrowser: iosCustomBrowser
                                                                           prefersEphemeralSession: prefersEphemeralSession
                                                                                           resolve: resolve
@@ -328,7 +340,7 @@ RCT_REMAP_METHOD(logout,
                           useNonce: (BOOL *) useNonce
                            usePKCE: (BOOL *) usePKCE
               additionalParameters: (NSDictionary *_Nullable) additionalParameters
-              skipCodeExchange: (BOOL) skipCodeExchange
+                  skipCodeExchange: (BOOL) skipCodeExchange
                   iosCustomBrowser: (NSString *) iosCustomBrowser
            prefersEphemeralSession: (BOOL *) prefersEphemeralSession
                            resolve: (RCTPromiseResolveBlock) resolve
@@ -343,7 +355,7 @@ RCT_REMAP_METHOD(logout,
     OIDAuthorizationRequest *request =
     [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
                                                   clientId:clientId
-     
+
                                               clientSecret:clientSecret
                                                      scope:[OIDScopeUtilities scopesWithArray:scopes]
                                                redirectURL:[NSURL URLWithString:redirectUrl]
@@ -376,7 +388,7 @@ RCT_REMAP_METHOD(logout,
 #elif TARGET_OS_IOS
     id<OIDExternalUserAgent> externalUserAgent = iosCustomBrowser != nil ? [self getCustomBrowser: iosCustomBrowser] : nil;
 #endif
-    
+
     OIDAuthorizationCallback callback = ^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
                                                    typeof(self) strongSelf = weakSelf;
                                                    strongSelf->_currentSession = nil;
@@ -391,7 +403,7 @@ RCT_REMAP_METHOD(logout,
                                                };
 
     if (skipCodeExchange) {
-        
+
         if(externalUserAgent != nil) {
             _currentSession = [OIDAuthorizationService presentAuthorizationRequest:request
                                                                  externalUserAgent:externalUserAgent
@@ -409,7 +421,7 @@ RCT_REMAP_METHOD(logout,
             }
         }
     } else {
-        
+
         if(externalUserAgent != nil) {
             _currentSession = [OIDAuthorizationService presentAuthorizationRequest:request
                                                                     externalUserAgent:externalUserAgent
@@ -516,7 +528,7 @@ RCT_REMAP_METHOD(logout,
     id<OIDExternalUserAgent> externalUserAgent = iosCustomBrowser != nil ? [self getCustomBrowser: iosCustomBrowser] : [self getExternalUserAgentWithPresentingViewController:presentingViewController
                                                                                                                                     prefersEphemeralSession:prefersEphemeralSession];
 #endif
-    
+
     _currentSession = [OIDAuthorizationService presentEndSessionRequest: endSessionRequest
                                                       externalUserAgent: externalUserAgent
                                              callback: ^(OIDEndSessionResponse *_Nullable response, NSError *_Nullable error) {
@@ -590,6 +602,7 @@ RCT_REMAP_METHOD(logout,
     return @{@"accessToken": response.accessToken ? response.accessToken : @"",
              @"accessTokenExpirationDate": response.accessTokenExpirationDate ? [dateFormat stringFromDate:response.accessTokenExpirationDate] : @"",
              @"additionalParameters": response.additionalParameters,
+             @"responseMode": response.responseMode,
              @"idToken": response.idToken ? response.idToken : @"",
              @"refreshToken": response.refreshToken ? response.refreshToken : @"",
              @"tokenType": response.tokenType ? response.tokenType : @"",
@@ -693,7 +706,7 @@ RCT_REMAP_METHOD(logout,
 #if !TARGET_OS_MACCATALYST
 - (id<OIDExternalUserAgent>)getCustomBrowser: (NSString *) browserType {
     typedef id<OIDExternalUserAgent> (^BrowserBlock)(void);
-    
+
     NSDictionary *browsers = @{
         @"safari":
             ^{

@@ -83,6 +83,16 @@ const validateConnectionTimeoutSeconds = timeout => {
   invariant(typeof timeout === 'number', 'Config error: connectionTimeoutSeconds must be a number');
 };
 
+const   validateResponseMode = responseMode => {
+  if (!responseMode) {
+    return;
+  }
+
+  invariant(typeof responseMode === 'string', 'Config error: responseMode must be a string');
+  const authorizedModes = ['query', 'fragment', 'form_post'];
+  invariant(authorizedModes.includes(reponseMode) , `Config error: responseMode must be one of ${authorizedModes.join(', ')}`);
+};
+
 export const SECOND_IN_MS = 1000;
 export const DEFAULT_TIMEOUT_IOS = 60;
 export const DEFAULT_TIMEOUT_ANDROID = 15;
@@ -139,11 +149,13 @@ export const register = ({
   customHeaders,
   additionalHeaders,
   connectionTimeoutSeconds,
+  reponseMode,
 }) => {
   validateIssuerOrServiceConfigurationRegistrationEndpoint(issuer, serviceConfiguration);
   validateHeaders(customHeaders);
   validateAdditionalHeaders(additionalHeaders);
   validateConnectionTimeoutSeconds(connectionTimeoutSeconds);
+  validateResponseMode(responseMode);
 
   invariant(
     Array.isArray(redirectUrls) && redirectUrls.every(url => typeof url === 'string'),
@@ -177,6 +189,7 @@ export const register = ({
     tokenEndpointAuthMethod,
     additionalParameters,
     serviceConfiguration,
+    responseMode,
     convertTimeoutForPlatform(Platform.OS, connectionTimeoutSeconds),
   ];
 
@@ -210,6 +223,7 @@ export const authorize = ({
   iosCustomBrowser = null,
   androidAllowCustomBrowsers = null,
   androidTrustedWebActivity = false,
+  responseMode,
   connectionTimeoutSeconds,
   iosPrefersEphemeralSession = false,
 }) => {
@@ -218,6 +232,7 @@ export const authorize = ({
   validateRedirectUrl(redirectUrl);
   validateHeaders(customHeaders);
   validateAdditionalHeaders(additionalHeaders);
+  validateResponseMode(responseMode);
   validateConnectionTimeoutSeconds(connectionTimeoutSeconds);
   // TODO: validateAdditionalParameters
 
@@ -241,6 +256,7 @@ export const authorize = ({
     nativeMethodArguments.push(customHeaders);
     nativeMethodArguments.push(androidAllowCustomBrowsers);
     nativeMethodArguments.push(androidTrustedWebActivity);
+    nativeMethodArguments.push(responseMode);
   }
 
   if (Platform.OS === 'ios') {
@@ -249,6 +265,7 @@ export const authorize = ({
     nativeMethodArguments.push(usePKCE);
     nativeMethodArguments.push(iosCustomBrowser);
     nativeMethodArguments.push(iosPrefersEphemeralSession);
+    nativeMethodArguments.push(responseMode);
   }
 
   return RNAppAuth.authorize(...nativeMethodArguments);
@@ -291,6 +308,7 @@ export const refresh = (
     scopes,
     additionalParameters,
     serviceConfiguration,
+    responseMode,
     convertTimeoutForPlatform(Platform.OS, connectionTimeoutSeconds),
   ];
 
@@ -358,6 +376,7 @@ export const logout = (
     issuer,
     serviceConfiguration,
     additionalParameters,
+    response
     dangerouslyAllowInsecureHttpRequests = false,
     iosCustomBrowser = null,
     iosPrefersEphemeralSession = false,
